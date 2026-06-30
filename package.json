@@ -7,6 +7,7 @@
         "start": "vite build --watch",
         "build": "tsc && vite build",
         "preview": "vite preview",
+        "bootstrap": "pnpm install --ignore-workspace && pnpm run build && pnpm run start",
         "types:check": "tsc --noEmit",
         "clean": "rm -rf dist/"
     },
@@ -16,6 +17,7 @@
     },
     "devDependencies": {
         "typescript": "^5.8.3",
-        "vite": "^7.0.8"
+        "vite": "^7.0.8",
+        "vite-live-preview": "^0.3.2"
     }
 }
