@@ -1,0 +1,57 @@
+@import "@penpot/plugin-styles/styles.css";
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.plugin-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-8);
+    padding: var(--spacing-16) var(--spacing-8);
+    box-sizing: border-box;
+}
+
+/* ── Test results ────────────────────────────────────────────────── */
+
+.test-results {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.test-results .test-summary {
+    font-weight: 600;
+}
+
+.test-results .test-case {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-8);
+}
+
+.test-results .test-case[data-passed="true"] {
+    color: var(--accent-primary);
+}
+
+.test-results .test-case[data-passed="false"] {
+    color: var(--error-500);
+}
+
+.test-results .test-error {
+    color: var(--error-500);
+    white-space: pre-wrap;
+}
+
+.test-results .test-transcript {
+    margin: 0 0 var(--spacing-8) 0;
+    padding-left: var(--spacing-16);
+    color: var(--foreground-secondary);
+}
+
+.test-results .test-transcript li {
+    margin: 0;
+}
