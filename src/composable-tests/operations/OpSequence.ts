@@ -9,7 +9,7 @@ import { Operation } from "../core/Operation.ts";
 export class OpSequence extends Operation {
     readonly steps: readonly Operation[];
 
-    constructor(steps: readonly Operation[]) {
+    constructor(...steps: Operation[]) {
         super();
         this.steps = steps;
     }
@@ -35,11 +35,6 @@ export class OpSequence extends Operation {
     override enumerateVariants(): Operation[] {
         return cartesianProduct(this.steps.map((step) => step.enumerateVariants())).map((steps) => new OpSequence(steps));
     }
-}
-
-/** Composes `steps` into a single ordered `Sequence` operation. */
-export function inSequence(...steps: Operation[]): OpSequence {
-    return new OpSequence(steps);
 }
 
 /** The cartesian product of the given lists, preserving order. */

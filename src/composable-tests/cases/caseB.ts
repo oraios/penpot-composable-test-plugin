@@ -4,7 +4,7 @@ import { ShapePropFillColor } from "../model/ShapeProp.ts";
 import { OpChangeProperty } from "../operations/OpChangeProperty";
 import { OpAssert } from "../operations/OpAssert";
 import { SetupSimpleComponentWithCopy } from "../setups/SetupSimpleComponentWithCopy";
-import { inSequence } from "../operations/OpSequence.ts";
+import { OpSequence } from "../operations/OpSequence.ts";
 
 // the three distinct fill colours the case uses (read-back values are lower-case)
 const BASELINE = new Color("#aaaaaa");
@@ -24,7 +24,7 @@ export function createTestCaseB(): TestCase {
     return new TestCase(
         "B: copy override survives later main change",
         setup,
-        inSequence(
+        new OpSequence(
             new OpChangeProperty(setup.roles.copyChild, fillColor, OVERRIDE),
             new OpChangeProperty(setup.roles.mainChild, fillColor, MAIN_CHANGE),
             new OpAssert("copy child keeps its override after the main changes", (situation) => {

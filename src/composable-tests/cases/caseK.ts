@@ -7,7 +7,7 @@ import { OpChangeProperty } from "../operations/OpChangeProperty";
 import { OpAssert } from "../operations/OpAssert";
 import { SetupNestableComponent } from "../setups/SetupNestableComponent";
 import { ContentCreationStrategyRectangle } from "../setups/content-creation/ContentCreationStrategyRectangle.ts";
-import { inSequence } from "../operations/OpSequence.ts";
+import { OpSequence } from "../operations/OpSequence.ts";
 import { OpOptional } from "../operations/OpOptional.ts";
 
 // distinct fill colours (read-back values are lower-case)
@@ -57,7 +57,7 @@ export function createTestCaseK(): TestCase {
     return new TestCase(
         "K: synchronisation precedence sweep",
         setup,
-        inSequence(
+        new OpSequence(
             // instantiate first (nesting wraps the copy), then sweep depth 0/1/2
             setup.createOpInstantiate(),
             new OpOptional(setup.createOpMakeNested()),

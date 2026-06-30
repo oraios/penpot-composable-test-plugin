@@ -9,7 +9,7 @@ import { Situation } from "../core/Situation.ts";
 export class OpOneOf extends Operation {
     readonly alternatives: readonly Operation[];
 
-    constructor(alternatives: readonly Operation[]) {
+    constructor(...alternatives: Operation[]) {
         super();
         this.alternatives = alternatives;
     }
