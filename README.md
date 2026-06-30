@@ -1,0 +1,95 @@
+# Composable Penpot API Tests (Plugin)
+
+A Penpot plugin that runs a suite of component behaviour tests against the live
+Penpot document, driving the public Plugin API exactly as a user's actions would.
+
+## What this is for
+
+Penpot components have subtle behaviour — overrides, propagation from a main to
+its copies, nesting, precedence between competing changes. This plugin exercises
+that behaviour through the same Plugin API that real integrations use, so the
+tests act as a check that the API surfaces the expected component semantics end to
+end.
+
+## Core principles
+
+These are the ideas the suite is built around. They are intended to outlast any
+particular code structure.
+
+- **A test is a composition of operations over a situation.** A *situation* is the
+  state a test acts on (the relevant shapes of a configuration, plus a record of
+  what has happened). An *operation* is one step — an edit, a structural change, or
+  an assertion. Tests are built by composing small operations, not by writing
+  bespoke procedures, so behaviour is described declaratively and pieces are
+  reused across tests.
+
+- **Operations compose, and choice points expand into variants.** Operations can
+  be sequenced, and a test can express a *choice* (do this, or skip it; pick one of
+  several). Before running, every choice is expanded into the full set of concrete
+  variants — so a single compact test definition becomes many independent runs
+  covering every combination. Each variant runs against a freshly built situation,
+  so variants never interfere.
+
+- **The real API, with real propagation.** Operations mutate the live document
+  through the Plugin API; propagation happens for real, and assertions read the
+  real resulting state. The suite does not simulate or model component behaviour —
+  it observes it.
+
+- **Setups own what they expose.** Each starting configuration is responsible for
+  building itself and for naming the participants a test refers to, so a test
+  addresses parts of the configuration by role rather than by reaching into
+  internals. How a configuration is grown (instantiated, nested) is offered by the
+  setup itself.
+
+- **Results are addressed by stable identity.** Every test (every expanded variant)
+  has a stable identity assigned once. The UI renders the tests, and each result
+  streams back keyed by that identity, so what you select to run and what you see
+  reported always refer to the same thing.
+
+## Usage
+
+### Build and run the plugin
+
+From this directory:
+
+```
+pnpm run bootstrap
+```
+
+This installs dependencies (isolated from the surrounding repository), builds the
+plugin, and then keeps rebuilding on change while serving it locally. The first
+build takes a little while before the server is ready.
+
+Other scripts: `pnpm run build` (one-off build), `pnpm start` (watch + serve),
+`pnpm run types:check` (type-check only).
+
+### Connect it in Penpot
+
+In Penpot, open the plugin manager and add a plugin by URL, using:
+
+```
+http://localhost:4410/manifest.json
+```
+
+The plugin panel will open inside Penpot.
+
+### Run the tests
+
+The panel lists every test, grouped by case. From there you can:
+
+- **Run all**, or select individual tests (or whole groups) and **run selected**.
+- Watch each test's status update live as it runs — pending, running, then passed
+  or failed.
+- **Fold open a test** to see the steps that were applied and, if it failed, the
+  failure message. (Details appear once a test has been run.)
+
+Because the tests create and modify shapes in the current document, run them in a
+scratch file rather than one whose contents you care about.
+
+## Adding a test
+
+A new test is a composition of operations over a starting configuration, added to
+the set of cases the suite runs. Reuse existing operations and setups where they
+fit; introduce a new operation or setup only when a genuinely new kind of step or
+configuration is needed. Express variation through the suite's choice operations
+rather than by writing out each combination by hand.
