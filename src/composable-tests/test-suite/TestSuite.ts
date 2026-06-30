@@ -1,8 +1,8 @@
-import { TestCase } from "./TestCase";
-import { RunnableTest } from "./RunnableTest";
-import { TestRunObserver } from "./TestRunObserver";
-import { TestTree } from "./TestTree";
-import { enumerate } from "./Enumeration";
+import { TestCase } from "./TestCase.ts";
+import { RunnableTest } from "../core/RunnableTest.ts";
+import { TestRunObserver } from "./TestRunObserver.ts";
+import { TestTree } from "./TestTree.ts";
+import { enumerate } from "../core/Enumeration.ts";
 
 /** A group of runnable tests enumerated from one case. */
 interface Group {

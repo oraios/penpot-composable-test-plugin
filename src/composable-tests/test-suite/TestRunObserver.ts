@@ -1,4 +1,4 @@
-import { TestResult } from "./TestResult";
+import { TestResult } from "./TestResult.ts";
 
 /**
  * Receives streaming notifications as a selected set of tests runs, addressed by

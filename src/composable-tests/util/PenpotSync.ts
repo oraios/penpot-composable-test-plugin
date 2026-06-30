@@ -1,7 +1,7 @@
 /**
  * Timing utilities for the composable tests.
  */
-export class Delay {
+export class PenpotSync {
     /** The fixed settling delay, in milliseconds, used by `awaitPropagation`. */
     private static readonly PROPAGATION_MS = 200;
 
@@ -12,6 +12,6 @@ export class Delay {
      * explicit "wait for propagation" primitive.
      */
     static awaitPropagation(): Promise<void> {
-        return new Promise((resolve) => setTimeout(resolve, Delay.PROPAGATION_MS));
+        return new Promise((resolve) => setTimeout(resolve, PenpotSync.PROPAGATION_MS));
     }
 }

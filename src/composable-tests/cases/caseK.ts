@@ -1,5 +1,5 @@
 import { Shape } from "@penpot/plugin-types";
-import { TestCase } from "../core/TestCase";
+import { TestCase } from "../test-suite/TestCase.ts";
 import { Situation } from "../core/Situation";
 import { inSequence } from "../core/Operation";
 import { optional } from "../core/Enumeration";
@@ -8,7 +8,7 @@ import { ShapePropFillColor } from "../model/ShapeProp.ts";
 import { OpChangeProperty } from "../operations/OpChangeProperty";
 import { OpAssert } from "../operations/OpAssert";
 import { SetupNestableComponent } from "../setups/SetupNestableComponent";
-import { StrategyRectContentCreation } from "../setups/content-creation/StrategyRectContentCreation";
+import { ContentCreationStrategyRectangle } from "../setups/content-creation/ContentCreationStrategyRectangle.ts";
 
 // distinct fill colours (read-back values are lower-case)
 const BASELINE = new Color("#aaaaaa");
@@ -32,7 +32,7 @@ const BLUE = new Color("#0000ff"); // copy edit
  * override-reset operation.)
  */
 export function createTestCaseK(): TestCase {
-    const setup = new SetupNestableComponent(new StrategyRectContentCreation(BASELINE));
+    const setup = new SetupNestableComponent(new ContentCreationStrategyRectangle(BASELINE));
     const fillColor = new ShapePropFillColor();
     const { remoteInstance, mainInstance, copyInstance } = setup.roles;
 
@@ -40,7 +40,7 @@ export function createTestCaseK(): TestCase {
     const rectOf =
         (role: typeof remoteInstance) =>
         (s: Situation): Shape =>
-            setup.strategy.getRect(s, s.get(role));
+            setup.strategy.getRectangle(s.get(role));
 
     const changeRemote = new OpChangeProperty(rectOf(remoteInstance), fillColor, RED, "remote rect");
     const changeMain = new OpChangeProperty(rectOf(mainInstance), fillColor, GREEN, "main rect");
@@ -67,7 +67,7 @@ export function createTestCaseK(): TestCase {
             optional(changeMain),
             optional(changeCopy),
             new OpAssert("copy shows the highest-precedence applied edit", (s) => {
-                const copyRect = setup.strategy.getRect(s, s.get(copyInstance));
+                const copyRect = setup.strategy.getRectangle(s.get(copyInstance));
                 fillColor.assertEqual(fillColor.read(copyRect), expectedAtCopy(s));
             })
         )

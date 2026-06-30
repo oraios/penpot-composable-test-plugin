@@ -7,7 +7,7 @@ import { Board } from "@penpot/plugin-types";
  * needed to locate that content afterwards (e.g. in an instance's subtree) is the
  * concrete strategy's own affair.
  */
-export abstract class StrategyContentCreation {
+export abstract class ContentCreationStrategy {
     /** Populates `board` with the component's content. */
     abstract createContent(board: Board): void;
 }

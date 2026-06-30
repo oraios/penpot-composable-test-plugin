@@ -4,7 +4,7 @@ import { Situation } from "../core/Situation";
 import { Operation } from "../core/Operation";
 import { Role } from "../core/Role";
 import { RoleBundle } from "../core/RoleBundle";
-import { StrategyContentCreation } from "./content-creation/StrategyContentCreation";
+import { ContentCreationStrategy } from "./content-creation/ContentCreationStrategy.ts";
 
 /**
  * The instance roles of a nestable-component configuration. Three component
@@ -96,7 +96,7 @@ class OpMakeNestedComponent extends Operation {
  * `mainInstance` at its main instance. The factory operations re-point the roles
  * as the configuration evolves (see the individual operations).
  */
-export class SetupNestableComponent<TStrategy extends StrategyContentCreation> extends Setup<RolesNestableComponent> {
+export class SetupNestableComponent<TStrategy extends ContentCreationStrategy> extends Setup<RolesNestableComponent> {
     readonly roles = new RolesNestableComponent();
 
     /**

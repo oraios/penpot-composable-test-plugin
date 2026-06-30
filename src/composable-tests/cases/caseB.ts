@@ -1,4 +1,4 @@
-import { TestCase } from "../core/TestCase";
+import { TestCase } from "../test-suite/TestCase.ts";
 import { inSequence } from "../core/Operation";
 import { Color } from "../model/Color";
 import { ShapePropFillColor } from "../model/ShapeProp.ts";

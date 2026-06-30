@@ -1,6 +1,6 @@
 import { Shape, Fill } from "@penpot/plugin-types";
 import { Color } from "./Color";
-import { Assert } from "../core/Assert";
+import { Assert } from "../util/Assert.ts";
 
 /**
  * A typed, readable and writable property of a shape. Abstracts a single visual

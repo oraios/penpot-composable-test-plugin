@@ -1,7 +1,7 @@
 import { Operation } from "./Operation";
 import { Setup } from "./Setup";
 import { RoleBundle } from "./RoleBundle";
-import { TestResult } from "./TestResult";
+import { TestResult } from "../test-suite/TestResult.ts";
 
 /**
  * One concrete, runnable test: a single enumerated variant of a case, carrying a

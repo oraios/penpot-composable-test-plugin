@@ -1,6 +1,6 @@
 import { Operation } from "../core/Operation";
 import { Situation } from "../core/Situation";
-import { Delay } from "../util/Delay";
+import { PenpotSync } from "../util/PenpotSync.ts";
 
 /**
  * An assertion step that observes the situation without changing it. Runs the
@@ -31,7 +31,7 @@ export class OpAssert extends Operation {
             this.assertion(situation);
         } catch {
             // a read may have raced propagation; let it settle and check once more
-            await Delay.awaitPropagation();
+            await PenpotSync.awaitPropagation();
             this.assertion(situation);
         }
     }

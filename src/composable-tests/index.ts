@@ -1,4 +1,4 @@
-import { TestSuite } from "./core/TestSuite";
+import { TestSuite } from "./test-suite/TestSuite.ts";
 import { allCases } from "./cases";
 
 /**
@@ -12,7 +12,7 @@ export function createTestSuite(): TestSuite {
     return new TestSuite(allCases());
 }
 
-export { TestSuite } from "./core/TestSuite";
-export type { TestRunObserver } from "./core/TestRunObserver";
-export type { TestTree, TestGroupInfo, TestInfo } from "./core/TestTree";
-export { TestResult } from "./core/TestResult";
+export { TestSuite } from "./test-suite/TestSuite.ts";
+export type { TestRunObserver } from "./test-suite/TestRunObserver.ts";
+export type { TestTree, TestGroupInfo, TestInfo } from "./test-suite/TestTree.ts";
+export { TestResult } from "./test-suite/TestResult.ts";

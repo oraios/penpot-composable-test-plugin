@@ -1,4 +1,4 @@
-import { TestCase } from "./core/TestCase";
+import { TestCase } from "./test-suite/TestCase.ts";
 import { createTestCaseB } from "./cases/caseB";
 import { createTestCaseK } from "./cases/caseK";
 

@@ -1,6 +1,6 @@
-import { Operation } from "./Operation";
-import { Setup } from "./Setup";
-import { RoleBundle } from "./RoleBundle";
+import { Operation } from "../core/Operation.ts";
+import { Setup } from "../core/Setup.ts";
+import { RoleBundle } from "../core/RoleBundle.ts";
 
 /**
  * A complete test: a named pairing of a setup (the starting configuration) and an
