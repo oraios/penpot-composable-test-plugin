@@ -2,7 +2,7 @@ import { Shape } from "@penpot/plugin-types";
 import { TestCase } from "../test-suite/TestCase.ts";
 import { Situation } from "../core/Situation";
 import { inSequence } from "../core/Operation";
-import { optional } from "../core/Enumeration";
+import { Optional } from "../core/Enumeration";
 import { Color } from "../model/Color";
 import { ShapePropFillColor } from "../model/ShapeProp.ts";
 import { OpChangeProperty } from "../operations/OpChangeProperty";
@@ -60,12 +60,12 @@ export function createTestCaseK(): TestCase {
         inSequence(
             // instantiate first (nesting wraps the copy), then sweep depth 0/1/2
             setup.createOpInstantiate(),
-            optional(setup.createOpMakeNested()),
-            optional(setup.createOpMakeNested()),
+            new Optional(setup.createOpMakeNested()),
+            new Optional(setup.createOpMakeNested()),
             // sweep which edits were made
-            optional(changeRemote),
-            optional(changeMain),
-            optional(changeCopy),
+            new Optional(changeRemote),
+            new Optional(changeMain),
+            new Optional(changeCopy),
             new OpAssert("copy shows the highest-precedence applied edit", (s) => {
                 const copyRect = setup.strategy.getRectangle(s.get(copyInstance));
                 fillColor.assertEqual(fillColor.read(copyRect), expectedAtCopy(s));

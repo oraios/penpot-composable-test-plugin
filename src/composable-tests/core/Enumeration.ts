@@ -42,19 +42,17 @@ export class OneOf extends Operation {
     }
 }
 
-/** A branch point over the given `alternatives`. */
-export function oneOf(...alternatives: Operation[]): OneOf {
-    return new OneOf(alternatives);
-}
-
 /**
  * Sweeps "with and without `operation`": a branch point between applying it and
- * skipping it. Enumerates to two trajectories, one including `operation` and one
- * not. The same `operation` instance can then be queried via
- * `Situation.wasApplied` inside an assertion to branch on which trajectory ran.
+ * skipping it (a `OneOf` over `[operation, Skip]`). Enumerates to two trajectories,
+ * one including `operation` and one not. The same `operation` instance can then be
+ * queried via `Situation.wasApplied` inside an assertion to branch on which
+ * trajectory ran.
  */
-export function optional(operation: Operation): OneOf {
-    return new OneOf([operation, new Skip()]);
+export class Optional extends OneOf {
+    constructor(operation: Operation) {
+        super([operation, new Skip()]);
+    }
 }
 
 /**

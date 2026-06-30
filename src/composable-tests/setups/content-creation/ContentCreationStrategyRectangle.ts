@@ -1,5 +1,4 @@
 import { Board, Shape } from "@penpot/plugin-types";
-import { Situation } from "../../core/Situation";
 import { Color } from "../../model/Color";
 import { ShapeTree } from "../../util/ShapeTree";
 import { ContentCreationStrategy } from "./ContentCreationStrategy.ts";
