@@ -2,6 +2,8 @@
 // postMessage). It offers a "Run tests" button and renders the run summary the
 // sandbox returns.
 
+import "./style.css";
+
 const runTestsBtn = document.getElementById("run-tests-btn") as HTMLButtonElement;
 const testResultsEl = document.getElementById("test-results") as HTMLElement;
 
