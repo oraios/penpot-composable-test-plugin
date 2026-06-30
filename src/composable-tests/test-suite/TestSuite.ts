@@ -24,7 +24,7 @@ export class TestSuite {
     private readonly groups: Group[];
     private readonly byId: Map<string, RunnableTest>;
 
-    constructor(cases: readonly TestCase<any>[]) {
+    constructor(cases: readonly TestCase[]) {
         this.groups = TestSuite.enumerateGroups(cases);
         this.byId = new Map(this.groups.flatMap((group) => group.tests.map((test) => [test.id, test])));
     }
@@ -59,12 +59,11 @@ export class TestSuite {
     }
 
     /** Expands each case into a group of runnable tests with stable ids. */
-    private static enumerateGroups(cases: readonly TestCase<any>[]): Group[] {
+    private static enumerateGroups(cases: readonly TestCase[]): Group[] {
         return cases.map((testCase, caseIndex) => {
             const operations = testCase.operation.enumerateVariants();
             const tests = operations.map(
-                (operation, i) =>
-                    new RunnableTest(`t${caseIndex}_${i}`, `instance #${i + 1}`, testCase.setup, operation)
+                (operation, i) => new RunnableTest(`t${caseIndex}_${i}`, `instance #${i + 1}`, operation)
             );
             return { name: testCase.name, tests };
         });

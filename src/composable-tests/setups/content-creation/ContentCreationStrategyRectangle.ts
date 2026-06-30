@@ -1,4 +1,5 @@
 import { Board, Shape } from "@penpot/plugin-types";
+import { Situation } from "../../core/Situation";
 import { Color } from "../../model/Color";
 import { ShapeTree } from "../../util/ShapeTree";
 import { ContentCreationStrategy } from "./ContentCreationStrategy.ts";
@@ -20,7 +21,7 @@ export class ContentCreationStrategyRectangle extends ContentCreationStrategy {
         super();
     }
 
-    createContent(board: Board): void {
+    createContent(_situation: Situation, board: Board): void {
         const rect = penpot.createRectangle();
         rect.name = RECT_NAME;
         rect.resize(50, 50);

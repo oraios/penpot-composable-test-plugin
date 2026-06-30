@@ -5,7 +5,7 @@ import { Color } from "../model/Color";
 import { ShapePropFillColor } from "../model/ShapeProp.ts";
 import { OpChangeProperty } from "../operations/OpChangeProperty";
 import { OpAssert } from "../operations/OpAssert";
-import { SetupNestableComponent } from "../setups/SetupNestableComponent";
+import { OpCreateNestableComponent } from "../operations/OpCreateNestableComponent";
 import { ContentCreationStrategyRectangle } from "../setups/content-creation/ContentCreationStrategyRectangle.ts";
 import { OpSequence } from "../operations/OpSequence.ts";
 import { OpOptional } from "../operations/OpOptional.ts";
@@ -32,15 +32,15 @@ const BLUE = new Color("#0000ff"); // copy edit
  * override-reset operation.)
  */
 export function createTestCaseK(): TestCase {
-    const setup = new SetupNestableComponent(new ContentCreationStrategyRectangle(BASELINE));
+    const foundation = new OpCreateNestableComponent(new ContentCreationStrategyRectangle(BASELINE));
     const fillColor = new ShapePropFillColor();
-    const { remoteInstance, mainInstance, copyInstance } = setup.roles;
+    const { remoteInstance, mainInstance, copyInstance } = foundation.roles;
 
     // resolve each instance's rect at the current depth via the strategy
     const rectOf =
         (role: typeof remoteInstance) =>
         (s: Situation): Shape =>
-            setup.strategy.getRectangle(s.get(role));
+            foundation.strategy.getRectangle(s.get(role));
 
     const changeRemote = new OpChangeProperty(rectOf(remoteInstance), fillColor, RED, "remote rect");
     const changeMain = new OpChangeProperty(rectOf(mainInstance), fillColor, GREEN, "main rect");
@@ -56,18 +56,18 @@ export function createTestCaseK(): TestCase {
 
     return new TestCase(
         "K: synchronisation precedence sweep",
-        setup,
         new OpSequence(
-            // instantiate first (nesting wraps the copy), then sweep depth 0/1/2
-            setup.createOpInstantiate(),
-            new OpOptional(setup.createOpMakeNested()),
-            new OpOptional(setup.createOpMakeNested()),
+            foundation,
+            foundation.createOpInstantiate(),
+            new OpOptional(foundation.createOpMakeNested()),
+            new OpOptional(foundation.createOpMakeNested()),
             // sweep which edits were made
             new OpOptional(changeRemote),
             new OpOptional(changeMain),
             new OpOptional(changeCopy),
+            // check the resulting colour
             new OpAssert("copy shows the highest-precedence applied edit", (s) => {
-                const copyRect = setup.strategy.getRectangle(s.get(copyInstance));
+                const copyRect = foundation.strategy.getRectangle(s.get(copyInstance));
                 fillColor.assertEqual(fillColor.read(copyRect), expectedAtCopy(s));
             })
         )

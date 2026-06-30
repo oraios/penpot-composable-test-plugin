@@ -1,10 +1,9 @@
 import { Board } from "@penpot/plugin-types";
-import { Setup } from "../core/Setup";
 import { Situation } from "../core/Situation";
 import { Operation } from "../core/Operation";
 import { Role } from "../core/Role";
 import { RoleBundle } from "../core/RoleBundle";
-import { ContentCreationStrategy } from "./content-creation/ContentCreationStrategy.ts";
+import { ContentCreationStrategy } from "../setups/content-creation/ContentCreationStrategy.ts";
 
 /**
  * The instance roles of a nestable-component configuration. Three component
@@ -84,19 +83,16 @@ class OpMakeNestedComponent extends Operation {
 }
 
 /**
- * A setup for a component that can be instantiated and nested. It owns the three
- * instance roles (`remoteInstance`, `mainInstance`, `copyInstance`) and a content-
- * creation strategy, and it provides the operations that grow the configuration —
- * so a case obtains them from the setup (`setup.createOpInstantiate()`,
- * `setup.createOpMakeNested()`), keeping the operations bound to this setup's
- * roles. The strategy type `TStrategy` is preserved so its content accessors
- * (e.g. locating a child) are available to the case.
- *
- * `build` creates the component and points both `remoteInstance` and
- * `mainInstance` at its main instance. The factory operations re-point the roles
- * as the configuration evolves (see the individual operations).
+ * The foundation operation for a component that can be instantiated and nested. As
+ * the first step of a trajectory it creates the component (its content supplied by
+ * a content-creation strategy) and binds both `remoteInstance` and `mainInstance`
+ * to its main instance. It owns the three instance roles and provides the
+ * operations that grow the configuration — a case obtains them from this op
+ * (`op.createOpInstantiate()`, `op.createOpMakeNested()`), keeping those
+ * operations bound to these roles. The strategy type `TStrategy` is preserved so
+ * its content accessors (e.g. locating a child) are available to the case.
  */
-export class SetupNestableComponent<TStrategy extends ContentCreationStrategy> extends Setup<RolesNestableComponent> {
+export class OpCreateNestableComponent<TStrategy extends ContentCreationStrategy> extends Operation {
     readonly roles = new RolesNestableComponent();
 
     /**
@@ -106,25 +102,23 @@ export class SetupNestableComponent<TStrategy extends ContentCreationStrategy> e
         super();
     }
 
-    async build(): Promise<Situation> {
+    async applyTo(situation: Situation): Promise<void> {
         // create the board, fill it via the strategy, and make it a component
         const board = penpot.createBoard();
         board.name = "ComponentRoot";
         board.resize(100, 100);
-        this.strategy.createContent(board);
+        this.strategy.createContent(situation, board);
 
         const component = penpot.library.local.createComponent([board]);
         const main = component.mainInstance() as Board;
 
         // remote and main both start at the original main; copy is set by instantiate
-        const situation = new Situation();
         situation.bind(this.roles.remoteInstance, main);
         situation.bind(this.roles.mainInstance, main);
-        return situation;
     }
 
-    describe(): string {
-        return "nestable component";
+    toString(): string {
+        return "create nestable component";
     }
 
     /** An operation that instantiates the current main and binds it as the copy. */

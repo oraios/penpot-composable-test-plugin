@@ -1,11 +1,11 @@
 import { Role } from "./Role";
 
 /**
- * Marker base class for a bundle of named roles exposed by a setup. A concrete
- * bundle declares the roles a particular configuration provides as `Role` fields;
- * the setup that builds the configuration owns an instance of the bundle and
- * binds its roles. Subclassing this marker lets `Setup` be parametrised by the
- * roles it offers, making the setup-to-roles connection explicit and typed.
+ * Marker base class for a bundle of named roles. A concrete bundle declares the
+ * roles a particular configuration provides as `Role` fields; the foundation
+ * operation that creates the configuration owns an instance of the bundle and
+ * binds its roles into the situation, giving a case a typed handle to the
+ * participants it acts on.
  */
 export abstract class RoleBundle {
     /**

@@ -33,7 +33,9 @@ export class OpSequence extends Operation {
      * concrete sequence per combination, each preserving the original order.
      */
     override enumerateVariants(): Operation[] {
-        return cartesianProduct(this.steps.map((step) => step.enumerateVariants())).map((steps) => new OpSequence(steps));
+        return cartesianProduct(this.steps.map((step) => step.enumerateVariants())).map(
+            (steps) => new OpSequence(...steps)
+        );
     }
 }
 

@@ -1,4 +1,5 @@
 import { Board } from "@penpot/plugin-types";
+import { Situation } from "../../core/Situation";
 
 /**
  * A strategy for creating the CONTENT of a component: given the board that will
@@ -6,8 +7,12 @@ import { Board } from "@penpot/plugin-types";
  * The abstract contract is just this one step — what a component contains. Anything
  * needed to locate that content afterwards (e.g. in an instance's subtree) is the
  * concrete strategy's own affair.
+ *
+ * The current situation is passed in so a strategy may resolve runtime values from
+ * it (e.g. a shape produced by an earlier operation, via a `ShapeTarget`);
+ * strategies that create content from scratch can ignore it.
  */
 export abstract class ContentCreationStrategy {
-    /** Populates `board` with the component's content. */
-    abstract createContent(board: Board): void;
+    /** Populates `board` with the component's content, drawing on `situation` as needed. */
+    abstract createContent(situation: Situation, board: Board): void;
 }

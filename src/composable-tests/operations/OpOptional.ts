@@ -11,6 +11,6 @@ import { OpOneOf } from "./OpOneOf.ts";
  */
 export class OpOptional extends OpOneOf {
     constructor(operation: Operation) {
-        super([operation, new OpSkip()]);
+        super(operation, new OpSkip());
     }
 }
