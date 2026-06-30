@@ -1,47 +1,18 @@
-import { TestRunner, TestResult } from "./core/TestRunner";
+import { TestSuite } from "./core/TestSuite";
 import { allCases } from "./cases";
 
-// (allCases is a factory: cases capture live setup state, so build fresh each run)
-
 /**
- * A serialisable summary of a test run, suitable for sending to the plugin UI.
- * Carries per-case outcomes plus aggregate counts.
+ * Builds the enumerated test suite for the live Penpot document. The suite expands
+ * every case into its concrete variants once (assigning stable ids) and serves
+ * both the tree the UI renders and the runs it requests. Intended to be created
+ * once by the plugin, which then sends its `tree()` to the UI and runs selected
+ * ids on demand.
  */
-export interface TestRunSummary {
-    total: number;
-    passed: number;
-    failed: number;
-    results: Array<{
-        name: string;
-        passed: boolean;
-        errorMessage?: string;
-        transcript: string[];
-    }>;
+export function createTestSuite(): TestSuite {
+    return new TestSuite(allCases());
 }
 
-/**
- * Runs the full composable test suite against the live Penpot document and
- * returns a serialisable summary. Intended to be invoked from the plugin in
- * response to the UI's "Run tests" action.
- */
-export async function runComposableTests(): Promise<TestRunSummary> {
-    const runner = new TestRunner();
-    const results = await runner.run(allCases());
-    return summarise(results);
-}
-
-/** Builds a serialisable summary from per-case results. */
-function summarise(results: readonly TestResult[]): TestRunSummary {
-    const passed = results.filter((r) => r.passed).length;
-    return {
-        total: results.length,
-        passed,
-        failed: results.length - passed,
-        results: results.map((r) => ({
-            name: r.name,
-            passed: r.passed,
-            errorMessage: r.errorMessage,
-            transcript: [...r.transcript],
-        })),
-    };
-}
+export { TestSuite } from "./core/TestSuite";
+export type { TestRunObserver } from "./core/TestRunObserver";
+export type { TestTree, TestGroupInfo, TestInfo } from "./core/TestTree";
+export { TestResult } from "./core/TestResult";
