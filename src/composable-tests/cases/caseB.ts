@@ -1,10 +1,10 @@
 import { TestCase } from "../test-suite/TestCase.ts";
-import { inSequence } from "../core/Operation";
 import { Color } from "../model/Color";
 import { ShapePropFillColor } from "../model/ShapeProp.ts";
 import { OpChangeProperty } from "../operations/OpChangeProperty";
 import { OpAssert } from "../operations/OpAssert";
 import { SetupSimpleComponentWithCopy } from "../setups/SetupSimpleComponentWithCopy";
+import { inSequence } from "../operations/OpSequence.ts";
 
 // the three distinct fill colours the case uses (read-back values are lower-case)
 const BASELINE = new Color("#aaaaaa");

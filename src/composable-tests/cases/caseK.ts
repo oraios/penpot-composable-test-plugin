@@ -1,14 +1,14 @@
 import { Shape } from "@penpot/plugin-types";
 import { TestCase } from "../test-suite/TestCase.ts";
 import { Situation } from "../core/Situation";
-import { inSequence } from "../core/Operation";
-import { Optional } from "../core/Enumeration";
 import { Color } from "../model/Color";
 import { ShapePropFillColor } from "../model/ShapeProp.ts";
 import { OpChangeProperty } from "../operations/OpChangeProperty";
 import { OpAssert } from "../operations/OpAssert";
 import { SetupNestableComponent } from "../setups/SetupNestableComponent";
 import { ContentCreationStrategyRectangle } from "../setups/content-creation/ContentCreationStrategyRectangle.ts";
+import { inSequence } from "../operations/OpSequence.ts";
+import { OpOptional } from "../operations/OpOptional.ts";
 
 // distinct fill colours (read-back values are lower-case)
 const BASELINE = new Color("#aaaaaa");
@@ -60,12 +60,12 @@ export function createTestCaseK(): TestCase {
         inSequence(
             // instantiate first (nesting wraps the copy), then sweep depth 0/1/2
             setup.createOpInstantiate(),
-            new Optional(setup.createOpMakeNested()),
-            new Optional(setup.createOpMakeNested()),
+            new OpOptional(setup.createOpMakeNested()),
+            new OpOptional(setup.createOpMakeNested()),
             // sweep which edits were made
-            new Optional(changeRemote),
-            new Optional(changeMain),
-            new Optional(changeCopy),
+            new OpOptional(changeRemote),
+            new OpOptional(changeMain),
+            new OpOptional(changeCopy),
             new OpAssert("copy shows the highest-precedence applied edit", (s) => {
                 const copyRect = setup.strategy.getRectangle(s.get(copyInstance));
                 fillColor.assertEqual(fillColor.read(copyRect), expectedAtCopy(s));

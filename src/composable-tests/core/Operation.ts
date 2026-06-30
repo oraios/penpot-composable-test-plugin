@@ -1,7 +1,5 @@
 import { Situation } from "./Situation";
 
-let nextOperationId = 0;
-
 /**
  * A single step in a test trajectory. Most operations transform the situation
  * (an edit, a structural change); some only observe it (an assertion). Reified
@@ -19,8 +17,11 @@ let nextOperationId = 0;
  * situation's bindings in place.
  */
 export abstract class Operation {
+    /** Source of stable per-instance ids; incremented as each operation is created. */
+    private static nextId = 0;
+
     /** This operation instance's stable identity. */
-    readonly id: number = nextOperationId++;
+    readonly id: number = Operation.nextId++;
 
     /** Applies this operation to `situation`, mutating it in place. */
     abstract applyTo(situation: Situation): Promise<void>;
@@ -37,37 +38,17 @@ export abstract class Operation {
     isRecorded(): boolean {
         return true;
     }
-}
 
-/**
- * An ordered composition of operations. Applies its steps left-to-right against
- * the same situation, threading the (mutated) situation through each, and marks
- * each applied step in the situation. The primary composition operator.
- */
-export class Sequence extends Operation {
-    readonly steps: readonly Operation[];
-
-    constructor(steps: readonly Operation[]) {
-        super();
-        this.steps = steps;
-    }
-
-    async applyTo(situation: Situation): Promise<void> {
-        for (const step of this.steps) {
-            await step.applyTo(situation);
-            if (step.isRecorded()) {
-                situation.markApplied(step);
-                situation.recordApplication(step.toString());
-            }
-        }
-    }
-
-    toString(): string {
-        return `sequence(${this.steps.map((s) => s.toString()).join(", ")})`;
+    /**
+     * Expands this operation into the concrete variants it stands for — every
+     * combination of choices it (and its children) contain, with no branch points
+     * remaining. A plain operation has a single variant: itself. Composites that
+     * introduce choice (a sequence of sub-operations, a branch point) override this
+     * to combine their children's variants. The runner runs each returned variant
+     * against a freshly-built situation.
+     */
+    enumerateVariants(): Operation[] {
+        return [this];
     }
 }
 
-/** Composes `steps` into a single ordered `Sequence` operation. */
-export function inSequence(...steps: Operation[]): Sequence {
-    return new Sequence(steps);
-}

@@ -1,8 +1,7 @@
 import { TestCase } from "./TestCase.ts";
-import { RunnableTest } from "../core/RunnableTest.ts";
+import { RunnableTest } from "./RunnableTest.ts";
 import { TestRunObserver } from "./TestRunObserver.ts";
 import { TestTree } from "./TestTree.ts";
-import { enumerate } from "../core/Enumeration.ts";
 
 /** A group of runnable tests enumerated from one case. */
 interface Group {
@@ -62,7 +61,7 @@ export class TestSuite {
     /** Expands each case into a group of runnable tests with stable ids. */
     private static enumerateGroups(cases: readonly TestCase<any>[]): Group[] {
         return cases.map((testCase, caseIndex) => {
-            const operations = enumerate(testCase.operation);
+            const operations = testCase.operation.enumerateVariants();
             const tests = operations.map(
                 (operation, i) =>
                     new RunnableTest(`t${caseIndex}_${i}`, `instance #${i + 1}`, testCase.setup, operation)
