@@ -4,11 +4,11 @@ import { Situation } from "../core/Situation";
 import { inSequence } from "../core/Operation";
 import { optional } from "../core/Enumeration";
 import { Color } from "../model/Color";
-import { FillColorProperty } from "../model/ShapeProperty";
-import { ChangePropertyOperation } from "../operations/ChangePropertyOperation";
-import { AssertOperation } from "../operations/AssertOperation";
-import { NestableComponentSetup } from "../setups/NestableComponentSetup";
-import { RectComponentCreationStrategy } from "../setups/RectComponentCreationStrategy";
+import { ShapePropFillColor } from "../model/ShapeProp.ts";
+import { OpChangeProperty } from "../operations/OpChangeProperty";
+import { OpAssert } from "../operations/OpAssert";
+import { SetupNestableComponent } from "../setups/SetupNestableComponent";
+import { StrategyRectContentCreation } from "../setups/content-creation/StrategyRectContentCreation";
 
 // distinct fill colours (read-back values are lower-case)
 const BASELINE = new Color("#aaaaaa");
@@ -32,8 +32,8 @@ const BLUE = new Color("#0000ff"); // copy edit
  * override-reset operation.)
  */
 export function createTestCaseK(): TestCase {
-    const setup = new NestableComponentSetup(new RectComponentCreationStrategy(BASELINE));
-    const fillColor = new FillColorProperty();
+    const setup = new SetupNestableComponent(new StrategyRectContentCreation(BASELINE));
+    const fillColor = new ShapePropFillColor();
     const { remoteInstance, mainInstance, copyInstance } = setup.roles;
 
     // resolve each instance's rect at the current depth via the strategy
@@ -42,9 +42,9 @@ export function createTestCaseK(): TestCase {
         (s: Situation): Shape =>
             setup.strategy.getRect(s, s.get(role));
 
-    const changeRemote = new ChangePropertyOperation(rectOf(remoteInstance), fillColor, RED, "remote rect");
-    const changeMain = new ChangePropertyOperation(rectOf(mainInstance), fillColor, GREEN, "main rect");
-    const changeCopy = new ChangePropertyOperation(rectOf(copyInstance), fillColor, BLUE, "copy rect");
+    const changeRemote = new OpChangeProperty(rectOf(remoteInstance), fillColor, RED, "remote rect");
+    const changeMain = new OpChangeProperty(rectOf(mainInstance), fillColor, GREEN, "main rect");
+    const changeCopy = new OpChangeProperty(rectOf(copyInstance), fillColor, BLUE, "copy rect");
 
     // the colour expected at the copy under the precedence rule
     const expectedAtCopy = (s: Situation): Color => {
@@ -66,7 +66,7 @@ export function createTestCaseK(): TestCase {
             optional(changeRemote),
             optional(changeMain),
             optional(changeCopy),
-            new AssertOperation("copy shows the highest-precedence applied edit", (s) => {
+            new OpAssert("copy shows the highest-precedence applied edit", (s) => {
                 const copyRect = setup.strategy.getRect(s, s.get(copyInstance));
                 fillColor.assertEqual(fillColor.read(copyRect), expectedAtCopy(s));
             })

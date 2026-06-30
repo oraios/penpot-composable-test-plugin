@@ -1,10 +1,10 @@
 import { TestCase } from "../core/TestCase";
 import { inSequence } from "../core/Operation";
 import { Color } from "../model/Color";
-import { FillColorProperty } from "../model/ShapeProperty";
-import { ChangePropertyOperation } from "../operations/ChangePropertyOperation";
-import { AssertOperation } from "../operations/AssertOperation";
-import { SimpleComponentWithCopySetup } from "../setups/SimpleComponentWithCopySetup";
+import { ShapePropFillColor } from "../model/ShapeProp.ts";
+import { OpChangeProperty } from "../operations/OpChangeProperty";
+import { OpAssert } from "../operations/OpAssert";
+import { SetupSimpleComponentWithCopy } from "../setups/SetupSimpleComponentWithCopy";
 
 // the three distinct fill colours the case uses (read-back values are lower-case)
 const BASELINE = new Color("#aaaaaa");
@@ -19,15 +19,15 @@ const MAIN_CHANGE = new Color("#00ff00");
  * property is not overwritten by main propagation).
  */
 export function createTestCaseB(): TestCase {
-    const setup = new SimpleComponentWithCopySetup(BASELINE);
-    const fillColor = new FillColorProperty();
+    const setup = new SetupSimpleComponentWithCopy(BASELINE);
+    const fillColor = new ShapePropFillColor();
     return new TestCase(
         "B: copy override survives later main change",
         setup,
         inSequence(
-            new ChangePropertyOperation(setup.roles.copyChild, fillColor, OVERRIDE),
-            new ChangePropertyOperation(setup.roles.mainChild, fillColor, MAIN_CHANGE),
-            new AssertOperation("copy child keeps its override after the main changes", (situation) => {
+            new OpChangeProperty(setup.roles.copyChild, fillColor, OVERRIDE),
+            new OpChangeProperty(setup.roles.mainChild, fillColor, MAIN_CHANGE),
+            new OpAssert("copy child keeps its override after the main changes", (situation) => {
                 const copyChild = situation.get(setup.roles.copyChild);
                 fillColor.assertEqual(fillColor.read(copyChild), OVERRIDE);
             })

@@ -1,19 +1,19 @@
 import { Board, Shape } from "@penpot/plugin-types";
-import { Situation } from "../core/Situation";
-import { Color } from "../model/Color";
-import { ShapeTree } from "../util/ShapeTree";
-import { ComponentCreationStrategy } from "./ComponentCreationStrategy";
+import { Situation } from "../../core/Situation";
+import { Color } from "../../model/Color";
+import { ShapeTree } from "../../util/ShapeTree";
+import { StrategyContentCreation } from "./StrategyContentCreation";
 
 /** The name given to the single rectangle this strategy places in a component. */
 const RECT_NAME = "Child";
 
 /**
- * A creation strategy whose component content is a single named rectangle. It
- * locates that rectangle inside any instance of the component by name, so the
+ * A content-creation strategy whose component content is a single named rectangle.
+ * It locates that rectangle inside any instance of the component by name, so the
  * "the rect of this instance" accessor works at any nesting depth (the rect is
  * found by descending whatever instance is handed in).
  */
-export class RectComponentCreationStrategy extends ComponentCreationStrategy {
+export class StrategyRectContentCreation extends StrategyContentCreation {
     /**
      * @param baselineColor - the rectangle's initial fill colour
      */

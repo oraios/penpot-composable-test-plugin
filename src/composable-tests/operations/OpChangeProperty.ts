@@ -1,7 +1,7 @@
 import { Operation } from "../core/Operation";
 import { Situation } from "../core/Situation";
 import { ShapeTarget, resolveTarget } from "../core/ShapeTarget";
-import { ShapeProperty } from "../model/ShapeProperty";
+import { ShapeProp } from "../model/ShapeProp.ts";
 
 /**
  * Sets a typed property to a given value on the shape a target resolves to. The
@@ -9,7 +9,7 @@ import { ShapeProperty } from "../model/ShapeProperty";
  * `target` resolves to in the situation (a role, or a function deriving the shape
  * from the situation). Generic over the property's value type `T`.
  */
-export class ChangePropertyOperation<T> extends Operation {
+export class OpChangeProperty<T> extends Operation {
     /**
      * @param target - resolves the shape to edit (role or situation-derived)
      * @param property - the property strategy used to write the value
@@ -20,7 +20,7 @@ export class ChangePropertyOperation<T> extends Operation {
      */
     constructor(
         private readonly target: ShapeTarget,
-        private readonly property: ShapeProperty<T>,
+        private readonly property: ShapeProp<T>,
         private readonly value: T,
         private readonly targetLabel: string = String(target)
     ) {

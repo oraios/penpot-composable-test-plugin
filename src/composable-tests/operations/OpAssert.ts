@@ -14,7 +14,7 @@ import { Delay } from "../util/Delay";
  * document is already consistent); only if it fails is propagation awaited and the
  * assertion retried once, whose outcome is final.
  */
-export class AssertOperation extends Operation {
+export class OpAssert extends Operation {
     /**
      * @param description - a short description of what is asserted
      * @param assertion - performs the assertions against the situation

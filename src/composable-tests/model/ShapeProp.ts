@@ -9,7 +9,7 @@ import { Assert } from "../core/Assert";
  * rather than hard-coding one attribute. The type parameter `T` is the
  * property's value type.
  */
-export interface ShapeProperty<T> {
+export interface ShapeProp<T> {
     /** A short name for the property, for diagnostics (e.g. "fill-color"). */
     readonly name: string;
 
@@ -31,7 +31,7 @@ export interface ShapeProperty<T> {
  * given a subclass's `equals` and `render`, it provides `assertEqual`. Concrete
  * properties implement only `name`, `read`, `write`, `equals`, and `render`.
  */
-export abstract class AbstractShapeProperty<T> implements ShapeProperty<T> {
+export abstract class ShapePropBase<T> implements ShapeProp<T> {
     abstract readonly name: string;
     abstract read(shape: Shape): T;
     abstract write(shape: Shape, value: T): void;
@@ -54,7 +54,7 @@ export abstract class AbstractShapeProperty<T> implements ShapeProperty<T> {
  * The solid fill colour of a shape. Reads and writes the shape's first fill as a
  * single solid `Color`; intended for shapes whose fill is one solid colour.
  */
-export class FillColorProperty extends AbstractShapeProperty<Color> {
+export class ShapePropFillColor extends ShapePropBase<Color> {
     readonly name = "fill-color";
 
     read(shape: Shape): Color {
