@@ -11,28 +11,26 @@ import { SlotIntegrity } from "../util/SlotIntegrity";
 
 const BASELINE = new Color("#aaaaaa");
 const NESTED_COUNT = 3;
+const LAYOUT = "grid" as const;
 
 /**
- * Case D — deleting a nested sub-head of a copy must not break slot alignment.
+ * Case D — CHARACTERIZATION: deleting a nested sub-head of a copy is well-behaved.
  *
  * Builds a component whose main holds several nested component instances, plus a
- * copy of it, then SWEEPS whether one of the copy's nested sub-heads is deleted.
- * In both variants it asserts the swap-slot invariant: every remaining sub-head
- * must still reference its positional slot in the main (see {@link SlotIntegrity}).
+ * copy of it, then SWEEPS whether one of the copy's nested sub-heads is deleted,
+ * asserting every remaining sub-head still references its positional slot in the
+ * main (see {@link SlotIntegrity}).
  *
- * - Without the deletion the invariant holds (the variant passes).
- * - With the deletion it does NOT: removing a sub-head shifts the remaining ones,
- *   so their shape-refs no longer match their position and — with no swap slot —
- *   the file fails referential-integrity validation.
- *
- * WARNING: against current Penpot the delete variant reproduces a hard crash of
- * the whole document (the referential-integrity check throws on the corrupt
- * state). The deletion is what real users do; this case is the regression test
- * for the fix. Prefer running its variants individually, and expect the delete
- * variant to take the project down until the underlying bug is fixed.
+ * This case PASSES for every layout (none / flex / grid): deleting a sub-head of a
+ * COPY only hides it (a deleted-subinstance), so the copy stays aligned and valid.
+ * We initially suspected the layout (flex, then grid) was the trigger; it is not —
+ * the copy-side delete is correct. The actual :missing-slot crash comes from a
+ * MAIN-side edit; see {@link ../cases/caseE} (and the clj regression test
+ * `common/test/.../comp_main_edit_breaks_copy_slots_test.cljc`). This case is kept
+ * as a characterization guard that copy-side deletes never corrupt the copy.
  */
 export function createTestCaseD(): TestCase {
-    const foundation = new OpCreateComponentWithNestedCopies(NESTED_COUNT, BASELINE);
+    const foundation = new OpCreateComponentWithNestedCopies(NESTED_COUNT, BASELINE, LAYOUT);
     const { outerMain, outerCopy } = foundation.roles;
 
     // the copy's first nested sub-head, resolved at apply-time

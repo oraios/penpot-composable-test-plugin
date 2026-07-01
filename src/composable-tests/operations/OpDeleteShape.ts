@@ -1,6 +1,7 @@
 import { Operation } from "../core/Operation";
 import { Situation } from "../core/Situation";
 import { ShapeTarget, resolveTarget } from "../core/ShapeTarget";
+import { PenpotSync } from "../util/PenpotSync";
 
 /**
  * Removes the shape a target resolves to from the document, via the Plugin API's
@@ -24,6 +25,9 @@ export class OpDeleteShape extends Operation {
     async applyTo(situation: Situation): Promise<void> {
         const shape = resolveTarget(this.target, situation);
         shape.remove();
+        // A delete fires an async `:layout/update` reflow on the parent; let it
+        // settle so any resulting (in)consistency is visible to later steps.
+        await PenpotSync.awaitPropagation();
     }
 
     toString(): string {
