@@ -1,5 +1,5 @@
 import { Board } from "@penpot/plugin-types";
-import { Situation } from "../../core/Situation";
+import { Situation } from "../core/Situation.ts";
 
 /**
  * A strategy for creating the CONTENT of a component: given the board that will

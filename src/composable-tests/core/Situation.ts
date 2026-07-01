@@ -1,5 +1,6 @@
 import { Shape } from "@penpot/plugin-types";
 import { Role } from "./Role";
+import { DataKey } from "./DataKey";
 
 /**
  * The mutable state a test trajectory operates on. Carries the role bindings
@@ -15,6 +16,8 @@ export class Situation {
     private readonly roles = new Map<string, Shape>();
     private readonly appliedLog: string[] = [];
     private readonly appliedIds = new Set<number>();
+    private readonly opData = new Map<number, unknown>();
+    private readonly keyedData = new Map<DataKey<unknown>, unknown>();
 
     /**
      * Binds `role` to `shape`, replacing any existing binding. Returns this
@@ -72,5 +75,41 @@ export class Situation {
      */
     wasApplied(operation: { id: number }): boolean {
         return this.appliedIds.has(operation.id);
+    }
+
+    /**
+     * Stores operation-specific data for `operation` (keyed by its stable identity),
+     * replacing any previous value. This is the situation's generic per-operation
+     * store; operations are expected to wrap it in typed accessors rather than
+     * callers reading it directly. The value type is the operation's own concern.
+     */
+    setData(operation: { id: number }, value: unknown): void {
+        this.opData.set(operation.id, value);
+    }
+
+    /**
+     * Retrieves the data previously stored for `operation`, or `undefined` if none.
+     * The caller (the owning operation) knows the value's type and narrows it.
+     */
+    getData(operation: { id: number }): unknown {
+        return this.opData.get(operation.id);
+    }
+
+    /**
+     * Stores data under `key`, replacing any previous value. This is the situation's
+     * shared keyed store: several cooperating operations may read and write one
+     * value under a common `DataKey`. The owning op class wraps this in typed
+     * accessors rather than exposing the key. The value type is `T`.
+     */
+    setKeyedData<T>(key: DataKey<T>, value: T): void {
+        this.keyedData.set(key as DataKey<unknown>, value);
+    }
+
+    /**
+     * Retrieves the data stored under `key`, or `undefined` if none. The owning op
+     * class knows the value's type via the key's type parameter.
+     */
+    getKeyedData<T>(key: DataKey<T>): T | undefined {
+        return this.keyedData.get(key as DataKey<unknown>) as T | undefined;
     }
 }
