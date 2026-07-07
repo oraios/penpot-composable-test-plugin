@@ -4,8 +4,9 @@ import { Situation } from "../core/Situation";
 import { Color } from "../model/Color";
 import { OpAssert } from "../operations/OpAssert";
 import { OpSequence } from "../operations/OpSequence.ts";
-import { OpCreateComponentWithNestedCopies } from "../operations/OpCreateComponentWithNestedCopies";
+import { OpCreateNestableComponent } from "../operations/OpCreateNestableComponent";
 import { OpReorderShape } from "../operations/OpReorderShape";
+import { ContentCreationStrategySiblingInstances } from "../content-creation/ContentCreationStrategySiblingInstances";
 import { SlotIntegrity } from "../util/SlotIntegrity";
 
 const BASELINE = new Color("#aaaaaa");
@@ -37,8 +38,12 @@ const NESTED_COUNT = 3;
  */
 export function createTestCaseE(): TestCase {
     // layout "none": the bug does not depend on the layout, only on the main reorder
-    const foundation = new OpCreateComponentWithNestedCopies(NESTED_COUNT, BASELINE);
-    const { outerMain, outerCopy } = foundation.roles;
+    const foundation = new OpCreateNestableComponent(
+        new ContentCreationStrategySiblingInstances(NESTED_COUNT, BASELINE)
+    );
+    // domain vocabulary for the generic roles: the outer component's main and its copy
+    const outerMain = foundation.roles.mainInstance;
+    const outerCopy = foundation.roles.copyInstance;
 
     // the MAIN's first nested sub-head, resolved at apply-time
     const firstMainSubhead = (s: Situation): Shape => (s.get(outerMain).children ?? [])[0];
@@ -47,6 +52,7 @@ export function createTestCaseE(): TestCase {
         "E: reordering a sub-head in the MAIN must not break copies (⚠ hangs the app today)",
         new OpSequence(
             foundation,
+            foundation.createOpInstantiate(),
             // move the main's first sub-head to the end — the corrupting operation
             new OpReorderShape(firstMainSubhead, NESTED_COUNT - 1, "first MAIN sub-head"),
             new OpAssert("every copy sub-head still references its positional slot in the main", (s) => {

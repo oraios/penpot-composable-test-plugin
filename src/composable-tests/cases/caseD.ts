@@ -5,8 +5,9 @@ import { Color } from "../model/Color";
 import { OpAssert } from "../operations/OpAssert";
 import { OpSequence } from "../operations/OpSequence.ts";
 import { OpOptional } from "../operations/OpOptional.ts";
-import { OpCreateComponentWithNestedCopies } from "../operations/OpCreateComponentWithNestedCopies";
+import { OpCreateNestableComponent } from "../operations/OpCreateNestableComponent";
 import { OpDeleteShape } from "../operations/OpDeleteShape";
+import { ContentCreationStrategySiblingInstances } from "../content-creation/ContentCreationStrategySiblingInstances";
 import { SlotIntegrity } from "../util/SlotIntegrity";
 
 const BASELINE = new Color("#aaaaaa");
@@ -30,8 +31,12 @@ const LAYOUT = "grid" as const;
  * as a characterization guard that copy-side deletes never corrupt the copy.
  */
 export function createTestCaseD(): TestCase {
-    const foundation = new OpCreateComponentWithNestedCopies(NESTED_COUNT, BASELINE, LAYOUT);
-    const { outerMain, outerCopy } = foundation.roles;
+    const foundation = new OpCreateNestableComponent(
+        new ContentCreationStrategySiblingInstances(NESTED_COUNT, BASELINE, LAYOUT)
+    );
+    // domain vocabulary for the generic roles: the outer component's main and its copy
+    const outerMain = foundation.roles.mainInstance;
+    const outerCopy = foundation.roles.copyInstance;
 
     // the copy's first nested sub-head, resolved at apply-time
     const firstSubhead = (s: Situation): Shape => (s.get(outerCopy).children ?? [])[0];
@@ -41,6 +46,7 @@ export function createTestCaseD(): TestCase {
         "D: deleting a nested copy sub-head must preserve slot alignment",
         new OpSequence(
             foundation,
+            foundation.createOpInstantiate(),
             // sweep with/without the deletion (the delete variant is the repro)
             new OpOptional(deleteFirstSubhead),
             new OpAssert("every copy sub-head still references its positional slot in the main", (s) => {
