@@ -43,7 +43,13 @@ class TestRowView {
     private state: TestState = "idle";
     private expanded = false;
 
-    constructor(info: TestInfo) {
+    /**
+     * @param info - the test's wire info (stable id and display name)
+     * @param identifier - the test's composite case identifier (the case's
+     *     identifier plus the 1-based index, e.g. "MainEditSyncs-2"); assigned
+     *     to the checkbox as its DOM id, for direct addressing
+     */
+    constructor(info: TestInfo, identifier: string) {
         this.id = info.id;
 
         this.element = document.createElement("div");
@@ -55,6 +61,7 @@ class TestRowView {
         this.checkbox = document.createElement("input");
         this.checkbox.type = "checkbox";
         this.checkbox.className = "checkbox-input";
+        this.checkbox.id = identifier;
 
         this.circle = document.createElement("span");
         this.circle.className = "status-circle";
@@ -162,7 +169,7 @@ class GroupView {
     private expanded = false;
 
     constructor(info: TestGroupInfo, onSelectionChange: () => void) {
-        this.rows = info.tests.map((test) => new TestRowView(test));
+        this.rows = info.tests.map((test, i) => new TestRowView(test, `${info.identifier}-${i + 1}`));
 
         this.element = document.createElement("div");
         this.element.className = "group";
@@ -176,6 +183,7 @@ class GroupView {
         this.checkbox = document.createElement("input");
         this.checkbox.type = "checkbox";
         this.checkbox.className = "checkbox-input";
+        this.checkbox.id = info.identifier;
         this.checkbox.addEventListener("change", () => {
             for (const row of this.rows) row.selected = this.checkbox.checked;
             onSelectionChange();
