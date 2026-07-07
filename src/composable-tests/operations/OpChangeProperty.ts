@@ -32,6 +32,21 @@ export class OpChangeProperty<T> extends Operation {
         this.property.write(shape, this.value);
     }
 
+    /**
+     * Asserts that the shape `target` resolves to now shows this operation's
+     * property change — i.e. that reading this op's property from that shape
+     * yields the value this op wrote. Lets a case check that an edit arrived on
+     * another shape (e.g. propagated from a main to its copy) without restating
+     * the property or the value.
+     *
+     * @param situation - the situation to resolve `target` against
+     * @param target - resolves the shape expected to show the change
+     */
+    assertHasChangedProperty(situation: Situation, target: ShapeTarget): void {
+        const shape = resolveTarget(target, situation);
+        this.property.assertEqual(this.property.read(shape), this.value);
+    }
+
     toString(): string {
         return `change ${this.property.name} of ${this.targetLabel} to ${String(this.value)}`;
     }

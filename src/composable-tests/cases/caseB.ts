@@ -19,18 +19,18 @@ const MAIN_CHANGE = new Color("#00ff00");
  * property is not overwritten by main propagation).
  */
 export function createTestCaseB(): TestCase {
-    const foundation = new OpCreateSimpleComponentWithCopy(BASELINE);
     const fillColor = new ShapePropFillColor();
+    const opCreateComponent = new OpCreateSimpleComponentWithCopy(BASELINE);
+    const opOverrideCopy = new OpChangeProperty(opCreateComponent.roles.copyChild, fillColor, OVERRIDE);
     return new TestCase(
         "B: copy override survives later main change",
         new OpSequence(
-            foundation,
-            new OpChangeProperty(foundation.roles.copyChild, fillColor, OVERRIDE),
-            new OpChangeProperty(foundation.roles.mainChild, fillColor, MAIN_CHANGE),
-            new OpAssert("copy child keeps its override after the main changes", (situation) => {
-                const copyChild = situation.get(foundation.roles.copyChild);
-                fillColor.assertEqual(fillColor.read(copyChild), OVERRIDE);
-            })
+            opCreateComponent,
+            opOverrideCopy,
+            new OpChangeProperty(opCreateComponent.roles.mainChild, fillColor, MAIN_CHANGE),
+            new OpAssert("copy child keeps its override after the main changes", (situation) =>
+                opOverrideCopy.assertHasChangedProperty(situation, opCreateComponent.roles.copyChild)
+            )
         )
     );
 }
