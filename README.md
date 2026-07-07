@@ -58,8 +58,9 @@ pnpm run bootstrap
 ```
 
 This installs dependencies (isolated from the surrounding repository), builds the
-plugin, and then keeps rebuilding on change while serving it locally. The first
-build takes a little while before the server is ready.
+plugin, and then keeps rebuilding on change while serving it locally; a connected
+plugin panel reloads automatically on each rebuild. The first build takes a
+little while before the server is ready.
 
 Other scripts: `pnpm run build` (one-off build), `pnpm start` (watch + serve),
 `pnpm run types:check` (type-check only).
@@ -127,6 +128,26 @@ await frame.getByRole("button", { name: "Run selected" }).click();
 State can be read back the same way — e.g. a checkbox's selection via
 `isChecked()` (a group checkbox reports `indeterminate` for a partial selection),
 or the per-group passed/failed counts from the header text.
+
+### Reading logs
+
+`console.log` statements anywhere in the plugin code — including test operations
+and assertions, which run in the plugin sandbox — surface in the browser console
+of the Penpot page, so a browser-automation bridge can read them (with
+Playwright's MCP tools: `browser_console_messages`). The page console carries a
+lot of unrelated traffic (Penpot itself, vite, other plugins), so prefix debug
+logs with the case identifier, e.g. `[MainEditSyncs] …`, and filter for that.
+Together with the panel state this closes the debug loop: add a log, run the
+failing test by id, read the log.
+
+### Auto-reload on code changes
+
+While the dev server is running (`pnpm start` or `pnpm run bootstrap`), any code
+change triggers a rebuild, and the live preview then reloads the plugin
+automatically — sandbox included, so changed test code takes effect without any
+manual reload step. Note that the reload resets the panel completely: all
+checkboxes are cleared and previous results are gone, so re-select what you want
+to run after changing code.
 
 ## Adding a test
 
