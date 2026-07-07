@@ -49,7 +49,12 @@ export function createTestCaseE(): TestCase {
     const firstMainSubhead = (s: Situation): Shape => (s.get(outerMain).children ?? [])[0];
 
     return new TestCase(
-        "E: reordering a sub-head in the MAIN must not break copies (⚠ hangs the app today)",
+        "MainReorderKeepsCopySlots",
+        "A component whose main holds several nested component instances is created, plus a copy " +
+            "of it. A nested sub-instance is then reordered INSIDE THE MAIN, which changes the " +
+            "positional matching that copies rely on. Penpot must keep the copies' slot references " +
+            "valid (assigning swap slots where needed); every copy sub-head must still reference " +
+            "its positional slot in the main afterwards.",
         new OpSequence(
             foundation,
             foundation.createOpInstantiate(),

@@ -5,7 +5,8 @@ import { TestTree } from "./TestTree.ts";
 
 /** A group of runnable tests enumerated from one case. */
 interface Group {
-    name: string;
+    identifier: string;
+    description: string;
     tests: RunnableTest[];
 }
 
@@ -33,7 +34,8 @@ export class TestSuite {
     tree(): TestTree {
         return {
             groups: this.groups.map((group) => ({
-                name: group.name,
+                identifier: group.identifier,
+                description: group.description,
                 tests: group.tests.map((test) => ({ id: test.id, name: test.name })),
             })),
         };
@@ -65,7 +67,7 @@ export class TestSuite {
             const tests = operations.map(
                 (operation, i) => new RunnableTest(`t${caseIndex}_${i}`, `instance #${i + 1}`, operation)
             );
-            return { name: testCase.name, tests };
+            return { identifier: testCase.identifier, description: testCase.description, tests };
         });
     }
 }

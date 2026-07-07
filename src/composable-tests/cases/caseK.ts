@@ -55,7 +55,15 @@ export function createTestCaseK(): TestCase {
     };
 
     return new TestCase(
-        "K: synchronisation precedence sweep",
+        "RemoteMainCopySyncNested",
+        "A component containing a rectangle is created and a copy is instantiated from it. The " +
+            "configuration is optionally nested one or two levels deep: each nesting wraps the " +
+            "copy in a new outer component, whose main becomes the current main, while the " +
+            "originally created main remains as the remote. Any combination of three edits is " +
+            "then applied: colouring the rectangle on the remote, on the current main, and on the " +
+            "copy. The copy's rectangle must show the highest-precedence applied edit — a copy " +
+            "override wins over a main change, which wins over a remote change, which wins over " +
+            "the baseline — at every nesting depth.",
         new OpSequence(
             opCreateComponent,
             opCreateComponent.createOpInstantiate(),

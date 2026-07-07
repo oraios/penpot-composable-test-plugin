@@ -23,7 +23,12 @@ export function createTestCaseB(): TestCase {
     const opCreateComponent = new OpCreateSimpleComponentWithCopy(BASELINE);
     const opOverrideCopy = new OpChangeProperty(opCreateComponent.roles.copyChild, fillColor, OVERRIDE);
     return new TestCase(
-        "B: copy override survives later main change",
+        "CopyOverrideSurvivesMainChange",
+        "A component containing a single rectangle is created, plus a copy of it. The copy's " +
+            "rectangle is then given an override: its fill colour is changed directly on the copy. " +
+            "Afterwards the main's rectangle is changed to yet another colour. The copy must keep " +
+            "its own overridden colour — a property touched on the copy is protected from being " +
+            "overwritten by later changes propagating from the main.",
         new OpSequence(
             opCreateComponent,
             opOverrideCopy,

@@ -38,7 +38,11 @@ export function createTestCaseC(): TestCase {
     ];
 
     return new TestCase(
-        "C: a main edit syncs to the copy, also when the copy is rotated",
+        "MainEditSyncs",
+        "A component containing a single rectangle is created, plus a copy of it. The copy is " +
+            "optionally rotated by 45° as a whole. Then one of several properties (fill colour, " +
+            "height) is changed on the main's rectangle. The change must propagate to the copy's " +
+            "rectangle — also when the copy was rotated beforehand.",
         new OpSequence(
             foundation,
             new OpOptional(rotateCopy),

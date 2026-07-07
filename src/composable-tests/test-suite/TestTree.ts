@@ -11,8 +11,10 @@ export interface TestTree {
 
 /** One group in the tree: a test case and its enumerated tests. */
 export interface TestGroupInfo {
-    /** The case's display name (the group header). */
-    name: string;
+    /** The case's CamelCase identifier (leads the group header). */
+    identifier: string;
+    /** The case's plain-terms description (shown next to / below the header). */
+    description: string;
     /** The group's tests, in enumeration order. */
     tests: TestInfo[];
 }

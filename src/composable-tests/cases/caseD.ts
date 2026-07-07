@@ -43,7 +43,12 @@ export function createTestCaseD(): TestCase {
     const deleteFirstSubhead = new OpDeleteShape(firstSubhead, "first copy sub-head");
 
     return new TestCase(
-        "D: deleting a nested copy sub-head must preserve slot alignment",
+        "CopySubheadDeletePreservesSlots",
+        "A component whose main holds several nested component instances is created, plus a copy " +
+            "of it. One of the copy's nested sub-heads is optionally deleted. Every remaining " +
+            "sub-head of the copy must still reference the slot at its position in the main — a " +
+            "copy-side delete must not corrupt the positional slot matching that Penpot's file " +
+            "validation enforces.",
         new OpSequence(
             foundation,
             foundation.createOpInstantiate(),

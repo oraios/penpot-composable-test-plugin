@@ -60,7 +60,15 @@ export function createTestCaseM(): TestCase {
     };
 
     return new TestCase(
-        "M: a variant switch propagates like a swap",
+        "VariantSwitchPropagates",
+        "A variant set with four differently coloured rectangle members is created. Its base " +
+            "member is placed inside a component, from which a copy is instantiated and then " +
+            "wrapped in further components, one nesting level at a time — so for each level there " +
+            "is a copy carrying the variant instance at that depth. At each level, that variant " +
+            "instance is optionally switched to a differently coloured member. Each level's " +
+            "rectangle must show the colour selected by the switch applied at the highest level " +
+            "at or below it: a variant switch must propagate through nesting exactly like a " +
+            "component swap.",
         new OpSequence(
             // foundations: create the variants, a component with an instance
             // and nest the instance several times

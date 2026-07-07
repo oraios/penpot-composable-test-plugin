@@ -17,7 +17,8 @@ interface TestInfo {
     name: string;
 }
 interface TestGroupInfo {
-    name: string;
+    identifier: string;
+    description: string;
     tests: TestInfo[];
 }
 interface TestTree {
@@ -155,6 +156,7 @@ class GroupView {
     private readonly checkbox: HTMLInputElement;
     private readonly circle: HTMLElement;
     private readonly count: HTMLElement;
+    private readonly passFail: HTMLElement;
     private readonly caret: HTMLElement;
     private readonly rowsContainer: HTMLElement;
     private expanded = false;
@@ -182,22 +184,33 @@ class GroupView {
         this.circle = document.createElement("span");
         this.circle.className = "status-circle";
 
-        const name = document.createElement("span");
-        name.className = "group-name body-s";
-        name.textContent = info.name;
+        const identifier = document.createElement("span");
+        identifier.className = "group-name body-s";
+        identifier.textContent = info.identifier;
 
         this.count = document.createElement("span");
         this.count.className = "group-count body-s";
+        this.count.textContent = `[${info.tests.length} tests]`;
+
+        // passed / failed counts, kept current by refresh()
+        this.passFail = document.createElement("span");
+        this.passFail.className = "group-passfail body-s";
 
         // clicking the header (but not the checkbox) folds the group open/closed
         header.addEventListener("click", (event) => {
             if (event.target !== this.checkbox) this.toggle();
         });
 
-        header.append(this.caret, this.checkbox, this.circle, name, this.count);
+        header.append(this.caret, this.checkbox, this.circle, identifier, this.count, this.passFail);
+
+        // the full description, shown as its own box in the unfolded section
+        const description = document.createElement("div");
+        description.className = "group-description body-s";
+        description.textContent = info.description;
 
         this.rowsContainer = document.createElement("div");
         this.rowsContainer.className = "group-rows";
+        this.rowsContainer.appendChild(description);
         for (const row of this.rows) {
             row.onSelectionChange(onSelectionChange);
             this.rowsContainer.appendChild(row.element);
@@ -227,7 +240,7 @@ class GroupView {
 
         const passed = this.rows.filter((r) => r.isPassed()).length;
         const failed = this.rows.filter((r) => r.isFailed()).length;
-        this.count.textContent = `${passed} / ${failed} · ${this.rows.length} tests`;
+        this.passFail.textContent = `${passed} / ${failed}`;
         this.circle.dataset.state = failed > 0 ? "failed" : passed === this.rows.length && passed > 0 ? "passed" : "idle";
     }
 }
