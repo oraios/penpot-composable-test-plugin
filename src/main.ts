@@ -261,10 +261,18 @@ class TestPanel {
     private readonly summaryEl = document.getElementById("summary") as HTMLElement;
     private readonly runAllBtn = document.getElementById("run-all-btn") as HTMLButtonElement;
     private readonly runSelectedBtn = document.getElementById("run-selected-btn") as HTMLButtonElement;
+    private readonly clearSelectionBtn = document.getElementById("clear-selection-btn") as HTMLButtonElement;
 
     constructor() {
         this.runAllBtn.addEventListener("click", () => this.run(this.allIds()));
         this.runSelectedBtn.addEventListener("click", () => this.run(this.selectedIds()));
+        this.clearSelectionBtn.addEventListener("click", () => this.clearSelection());
+    }
+
+    /** Deselects every test and updates the group aggregates. */
+    private clearSelection(): void {
+        for (const row of this.rowsById.values()) row.selected = false;
+        this.onSelectionChange();
     }
 
     /** Renders the enumerated tree (all tests idle, none selected). */
