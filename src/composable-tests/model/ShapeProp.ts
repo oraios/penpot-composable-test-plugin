@@ -82,3 +82,54 @@ export class ShapePropFillColor extends ShapePropBase<Color> {
         return value.toString();
     }
 }
+
+/**
+ * Base class for numeric shape properties, supplying tolerance-based equality
+ * (guarding against floating-point noise in values read back from the document)
+ * and plain-number rendering. Concrete properties implement `name`, `read`, and
+ * `write`.
+ */
+export abstract class ShapePropNumberBase extends ShapePropBase<number> {
+    /** The tolerance within which two values count as equal. */
+    private static readonly EPSILON = 1e-6;
+
+    equals(a: number, b: number): boolean {
+        return Math.abs(a - b) <= ShapePropNumberBase.EPSILON;
+    }
+
+    protected render(value: number): string {
+        return String(value);
+    }
+}
+
+/**
+ * The rotation of a shape, in degrees, with respect to its centre. Reads and
+ * writes the shape's `rotation` directly.
+ */
+export class ShapePropRotation extends ShapePropNumberBase {
+    readonly name = "rotation";
+
+    read(shape: Shape): number {
+        return shape.rotation;
+    }
+
+    write(shape: Shape, value: number): void {
+        shape.rotation = value;
+    }
+}
+
+/**
+ * The height of a shape. `height` is read-only in the Plugin API, so writing goes
+ * through `resize`, keeping the current width.
+ */
+export class ShapePropHeight extends ShapePropNumberBase {
+    readonly name = "height";
+
+    read(shape: Shape): number {
+        return shape.height;
+    }
+
+    write(shape: Shape, value: number): void {
+        shape.resize(shape.width, value);
+    }
+}

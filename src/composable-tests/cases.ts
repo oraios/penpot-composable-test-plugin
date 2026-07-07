@@ -1,5 +1,6 @@
 import { TestCase } from "./test-suite/TestCase.ts";
 import { createTestCaseB } from "./cases/caseB";
+import { createTestCaseC } from "./cases/caseC";
 import { createTestCaseK } from "./cases/caseK";
 import { createTestCaseM } from "./cases/caseM";
 import { createTestCaseD } from "./cases/caseD";
@@ -13,6 +14,7 @@ import { createTestCaseE } from "./cases/caseE";
 export function allCases(): readonly TestCase[] {
     return [
         createTestCaseB(),
+        createTestCaseC(),
         createTestCaseK(),
         createTestCaseM(),
         createTestCaseD(),
