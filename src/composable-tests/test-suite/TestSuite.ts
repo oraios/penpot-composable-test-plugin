@@ -51,24 +51,23 @@ export class TestSuite {
      * test's start and finish through `observer`, in the given order.
      */
     async run(ids: readonly string[], observer: TestRunObserver): Promise<void> {
+        let posY = 0;
         for (const id of ids) {
             const test = this.byId.get(id);
             if (test === undefined) continue;
             observer.onTestStarted(id);
-            const result = await test.run();
+            const result = await test.run(posY);
+            posY += 150; // advance y-position for next test
             observer.onTestFinished(id, result);
         }
     }
 
     /** Expands each case into a group of runnable tests with stable ids. */
     private static enumerateGroups(cases: readonly TestCase[]): Group[] {
-        let posY = 0;
         return cases.map((testCase, caseIndex) => {
             const operations = testCase.operation.enumerateVariants();
             const tests = operations.map((operation, i) => {
-                const test = new RunnableTest(`t${caseIndex}_${i}`, `instance #${i + 1}`, operation, posY);
-                posY += 150;
-                return test;
+                return new RunnableTest(`t${caseIndex}_${i}`, `instance #${i + 1}`, operation);
             });
             return { identifier: testCase.identifier, description: testCase.description, tests };
         });
