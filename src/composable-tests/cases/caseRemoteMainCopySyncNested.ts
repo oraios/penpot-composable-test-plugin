@@ -31,7 +31,7 @@ const BLUE = new Color("#0000ff"); // copy edit
  * (The reset checkpoint of the original case is omitted: the Plugin API exposes no
  * override-reset operation.)
  */
-export function createTestCaseK(): TestCase {
+export function createTestCaseRemoteMainCopySyncNested(): TestCase {
     const opCreateComponent = new OpCreateNestableComponent(new ContentCreationStrategyRectangle(BASELINE));
     const fillColor = new ShapePropFillColor();
     const { remoteInstance, mainInstance, copyInstance } = opCreateComponent.roles;

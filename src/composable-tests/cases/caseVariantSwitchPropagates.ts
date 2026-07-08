@@ -23,7 +23,7 @@ import { ContentCreationStrategyRectangle } from "../content-creation/ContentCre
  * overrides it — so the colour at level i is the switch applied at the HIGHEST
  * index j ≤ i, else the base member's colour.
  */
-export function createTestCaseM(): TestCase {
+export function createTestCaseVariantSwitchPropagates(): TestCase {
     const fillColor = new ShapePropFillColor();
     // the variant members' colours: index 0 is the base member, 1..3 the siblings a
     // switch can select. swapColors[i] is the colour a switch at level i selects.

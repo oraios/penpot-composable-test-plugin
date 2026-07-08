@@ -1,10 +1,10 @@
 import { TestCase } from "./test-suite/TestCase.ts";
-import { createTestCaseB } from "./cases/caseB";
-import { createTestCaseC } from "./cases/caseC";
-import { createTestCaseK } from "./cases/caseK";
-import { createTestCaseM } from "./cases/caseM";
-import { createTestCaseD } from "./cases/caseD";
-import { createTestCaseE } from "./cases/caseE";
+import { createTestCaseCopyOverrideSurvivesMainChange } from "./cases/caseCopyOverrideSurvivesMainChange.ts";
+import { createTestCaseMainEditSyncs } from "./cases/caseMainEditSyncs.ts";
+import { createTestCaseRemoteMainCopySyncNested } from "./cases/caseRemoteMainCopySyncNested.ts";
+import { createTestCaseVariantSwitchPropagates } from "./cases/caseVariantSwitchPropagates.ts";
+import { createTestCaseCopySubheadDeletePreservesSlots } from "./cases/caseCopySubheadDeletePreservesSlots.ts";
+import { createTestCaseMainReorderKeepsCopySlots } from "./cases/caseMainReorderKeepsCopySlots.ts";
 
 /**
  * All composable test cases currently defined. A factory (not a constant): each
@@ -13,11 +13,11 @@ import { createTestCaseE } from "./cases/caseE";
  */
 export function allCases(): readonly TestCase[] {
     return [
-        createTestCaseB(),
-        createTestCaseC(),
-        createTestCaseK(),
-        createTestCaseM(),
-        createTestCaseD(),
-        createTestCaseE()
+        createTestCaseCopyOverrideSurvivesMainChange(),
+        createTestCaseMainEditSyncs(),
+        createTestCaseRemoteMainCopySyncNested(),
+        createTestCaseVariantSwitchPropagates(),
+        createTestCaseCopySubheadDeletePreservesSlots(),
+        createTestCaseMainReorderKeepsCopySlots()
     ];
 }

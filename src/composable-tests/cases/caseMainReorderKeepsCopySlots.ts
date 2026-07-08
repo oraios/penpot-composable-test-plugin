@@ -36,7 +36,7 @@ const NESTED_COUNT = 3;
  * Once Penpot propagates swap slots to copies on a main reorder, this case will
  * complete and the assertion will pass.
  */
-export function createTestCaseE(): TestCase {
+export function createTestCaseMainReorderKeepsCopySlots(): TestCase {
     // layout "none": the bug does not depend on the layout, only on the main reorder
     const foundation = new OpCreateNestableComponent(
         new ContentCreationStrategySiblingInstances(NESTED_COUNT, BASELINE)

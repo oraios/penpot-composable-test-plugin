@@ -30,7 +30,7 @@ const LAYOUT = "grid" as const;
  * `common/test/.../comp_main_edit_breaks_copy_slots_test.cljc`). This case is kept
  * as a characterization guard that copy-side deletes never corrupt the copy.
  */
-export function createTestCaseD(): TestCase {
+export function createTestCaseCopySubheadDeletePreservesSlots(): TestCase {
     const foundation = new OpCreateNestableComponent(
         new ContentCreationStrategySiblingInstances(NESTED_COUNT, BASELINE, LAYOUT)
     );

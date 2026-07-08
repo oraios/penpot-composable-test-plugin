@@ -24,7 +24,7 @@ const ROTATION_DEGREES = 45;
  * applied is reflected on the COPY's rectangle. The rotation sweep guards the
  * regression class where a transformed copy stops receiving main propagation.
  */
-export function createTestCaseC(): TestCase {
+export function createTestCaseMainEditSyncs(): TestCase {
     const foundation = new OpCreateSimpleComponentWithCopy(BASELINE);
     const { mainChild, copyChild, copyRoot } = foundation.roles;
 

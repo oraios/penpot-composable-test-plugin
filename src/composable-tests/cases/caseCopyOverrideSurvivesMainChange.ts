@@ -18,7 +18,7 @@ const MAIN_CHANGE = new Color("#00ff00");
  * different colour, and assert the copy still shows the override (a touched
  * property is not overwritten by main propagation).
  */
-export function createTestCaseB(): TestCase {
+export function createTestCaseCopyOverrideSurvivesMainChange(): TestCase {
     const fillColor = new ShapePropFillColor();
     const opCreateComponent = new OpCreateSimpleComponentWithCopy(BASELINE);
     const opOverrideCopy = new OpChangeProperty(opCreateComponent.roles.copyChild, fillColor, OVERRIDE);
