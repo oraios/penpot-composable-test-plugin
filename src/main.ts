@@ -249,7 +249,8 @@ class GroupView {
         const passed = this.rows.filter((r) => r.isPassed()).length;
         const failed = this.rows.filter((r) => r.isFailed()).length;
         this.passFail.textContent = `${passed} / ${failed}`;
-        this.circle.dataset.state = failed > 0 ? "failed" : passed === this.rows.length && passed > 0 ? "passed" : "idle";
+        this.circle.dataset.state =
+            failed > 0 ? "failed" : passed === this.rows.length && passed > 0 ? "passed" : "idle";
     }
 }
 

@@ -19,5 +19,3 @@ export class OpSkip extends Operation {
         return false;
     }
 }
-
-

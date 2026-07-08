@@ -29,7 +29,7 @@ export function createTestCaseVariantSwitchPropagates(): TestCase {
     // switch can select. swapColors[i] is the colour a switch at level i selects.
     const baseColor = new Color("#aaaaaa");
     const swapColors = [new Color("#ff0000"), new Color("#00ff00"), new Color("#0000ff")];
-    const variantColors = [baseColor, ...swapColors];  // variant i has colour COLORS[i]
+    const variantColors = [baseColor, ...swapColors]; // variant i has colour COLORS[i]
     const nestingLevels = 3;
 
     // the variant set: one rectangle member per colour, addressed by index value
@@ -44,11 +44,14 @@ export function createTestCaseVariantSwitchPropagates(): TestCase {
     // switch[i] switches level i's variant instance to member i+1 (colour SWAP_COLORS[i]).
     // The nestable op yields the structural nested head; the variant container finds
     // the variant instance within it — keeping variant knowledge out of the nestable op.
-    const opVariantSwitches = Array.from({ length: nestingLevels }, (_unused, i) =>
-        new OpSwitchVariant(
-            (s: Situation) => opCreateVariantContainer.getVariantInstance(opCreateComponent.getNestedInstance(s, i)),
-            opCreateVariantContainer.valueForVariant(i + 1)
-        )
+    const opVariantSwitches = Array.from(
+        { length: nestingLevels },
+        (_unused, i) =>
+            new OpSwitchVariant(
+                (s: Situation) =>
+                    opCreateVariantContainer.getVariantInstance(opCreateComponent.getNestedInstance(s, i)),
+                opCreateVariantContainer.valueForVariant(i + 1)
+            )
     );
 
     // the colour expected at level i: the switch applied at the highest j ≤ i, else base

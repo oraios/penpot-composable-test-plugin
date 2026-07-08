@@ -36,9 +36,14 @@ export class ContentCreationStrategyRectangle extends ContentCreationStrategy {
      * @param instance - the root shape/component instance to search within
      */
     static findRectangle(instance: Shape): Shape {
-        const rect = ShapeUtil.findShape(instance, (shape) => shape.name === ContentCreationStrategyRectangle.RECT_SHAPE_NAME);
+        const rect = ShapeUtil.findShape(
+            instance,
+            (shape) => shape.name === ContentCreationStrategyRectangle.RECT_SHAPE_NAME
+        );
         if (rect === null) {
-            throw new Error(`Could not find child "${ContentCreationStrategyRectangle.RECT_SHAPE_NAME}" inside instance "${instance.name}"`);
+            throw new Error(
+                `Could not find child "${ContentCreationStrategyRectangle.RECT_SHAPE_NAME}" inside instance "${instance.name}"`
+            );
         }
         return rect;
     }

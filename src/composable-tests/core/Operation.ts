@@ -51,4 +51,3 @@ export abstract class Operation {
         return [this];
     }
 }
-

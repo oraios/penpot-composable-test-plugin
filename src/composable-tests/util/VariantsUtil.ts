@@ -33,9 +33,11 @@ export class VariantsUtil {
 
         // combine the components into a variant container
         // (createVariantFromComponents is not in the pinned plugin-types, but exists at runtime)
-        const container = (penpot as unknown as {
-            createVariantFromComponents(shapes: Board[]): VariantContainer;
-        }).createVariantFromComponents(components.map((c) => c.shape));
+        const container = (
+            penpot as unknown as {
+                createVariantFromComponents(shapes: Board[]): VariantContainer;
+            }
+        ).createVariantFromComponents(components.map((c) => c.shape));
 
         const variants = container.variants;
         if (variants === null) {

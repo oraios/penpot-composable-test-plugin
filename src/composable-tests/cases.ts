@@ -18,6 +18,6 @@ export function allCases(): readonly TestCase[] {
         createTestCaseRemoteMainCopySyncNested(),
         createTestCaseVariantSwitchPropagates(),
         createTestCaseCopySubheadDeletePreservesSlots(),
-        createTestCaseMainReorderKeepsCopySlots()
+        createTestCaseMainReorderKeepsCopySlots(),
     ];
 }
