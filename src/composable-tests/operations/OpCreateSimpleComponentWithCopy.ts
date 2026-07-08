@@ -55,9 +55,11 @@ export class OpCreateSimpleComponentWithCopy extends Operation {
         // turn the board into a component; its main instance is the board itself
         const component = penpot.library.local.createComponent([board]);
         const mainRoot = component.mainInstance();
+        situation.applyPosAdvanceX(mainRoot);
 
         // instantiate a copy of the component on the current page
         const copyRoot = component.instance();
+        situation.applyPosAdvanceX(copyRoot);
 
         situation.bind(this.roles.mainChild, this.onlyChildOf(mainRoot));
         situation.bind(this.roles.copyChild, this.onlyChildOf(copyRoot));

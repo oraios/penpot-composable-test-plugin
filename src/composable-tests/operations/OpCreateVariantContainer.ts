@@ -55,6 +55,7 @@ export class OpCreateVariantContainer extends Operation {
         );
 
         situation.setData(this, container);
+        situation.applyPosAdvanceX(container);
     }
 
     toString(): string {

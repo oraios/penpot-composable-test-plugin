@@ -65,6 +65,7 @@ class OpInstantiateCopy extends Operation {
         }
         const copy = component.instance() as Board;
         situation.bind(roles.copyInstance, copy);
+        situation.applyPosAdvanceX(copy);
 
         // the freshly instantiated copy is the innermost (level 0) copy
         this.parent.getNestingData(situation).copyInstances.push(copy);
@@ -96,6 +97,7 @@ class OpMakeNestedComponent extends Operation {
         outerBoard.name = NESTED_COMPONENT_NAME;
         outerBoard.appendChild(inner);
         const outerComponent = penpot.library.local.createComponent([outerBoard]);
+        situation.applyPosAdvanceX(outerComponent.mainInstance());
 
         // the outer main becomes the current main; remote stays fixed
         situation.bind(roles.mainInstance, outerComponent.mainInstance() as Board);
@@ -150,6 +152,7 @@ export class OpCreateNestableComponent<TContentCreator extends ContentCreationSt
         board.name = ORIGINAL_COMPONENT_NAME;
         board.resize(100, 100);
         this.contentCreator.createContent(situation, board);
+        situation.applyPosAdvanceX(board);
 
         const component = penpot.library.local.createComponent([board]);
         const main = component.mainInstance() as Board;

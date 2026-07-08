@@ -62,11 +62,14 @@ export class TestSuite {
 
     /** Expands each case into a group of runnable tests with stable ids. */
     private static enumerateGroups(cases: readonly TestCase[]): Group[] {
+        let posY = 0;
         return cases.map((testCase, caseIndex) => {
             const operations = testCase.operation.enumerateVariants();
-            const tests = operations.map(
-                (operation, i) => new RunnableTest(`t${caseIndex}_${i}`, `instance #${i + 1}`, operation)
-            );
+            const tests = operations.map((operation, i) => {
+                const test = new RunnableTest(`t${caseIndex}_${i}`, `instance #${i + 1}`, operation, posY);
+                posY += 150;
+                return test;
+            });
             return { identifier: testCase.identifier, description: testCase.description, tests };
         });
     }

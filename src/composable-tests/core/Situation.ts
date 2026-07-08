@@ -13,11 +13,19 @@ import { DataKey } from "./DataKey";
  * rather than returning a nullish value.
  */
 export class Situation {
+    private static readonly SHAPE_SPACING = 10; // pixels to advance X for next shape
+
     private readonly roles = new Map<string, Shape>();
     private readonly appliedLog: string[] = [];
     private readonly appliedIds = new Set<number>();
     private readonly opData = new Map<number, unknown>();
     private readonly keyedData = new Map<DataKey<unknown>, unknown>();
+    private nextShapeX = 0;
+    private nextShapeY = 0;
+
+    constructor(shapePosY: number = 0) {
+        this.nextShapeY = shapePosY;
+    }
 
     /**
      * Binds `role` to `shape`, replacing any existing binding. Returns this
@@ -26,6 +34,19 @@ export class Situation {
     bind<T extends Shape>(role: Role<T>, shape: T): this {
         this.roles.set(role.name, shape);
         return this;
+    }
+
+    /**
+     * Positions `shape` at the next designated coordinates, then advances the X
+     * coordinate for the next shape.
+     * Shapes are laid out in a horizontal row with a fixed spacing between them.
+     *
+     * @param shape - the shape to position
+     */
+    applyPosAdvanceX(shape: Shape): void {
+        shape.x = this.nextShapeX;
+        shape.y = this.nextShapeY;
+        this.nextShapeX += shape.width + Situation.SHAPE_SPACING; // advance X for next shape
     }
 
     /**

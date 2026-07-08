@@ -15,16 +15,18 @@ export class RunnableTest {
      * @param id - stable opaque identity (used as the UI key and in run requests)
      * @param name - display name (e.g. "instance #1")
      * @param operation - the concrete (fully chosen) trajectory to apply
+     * @param shapePosY - the initial shape y-coordinate to use for the situation
      */
     constructor(
         public readonly id: string,
         public readonly name: string,
-        private readonly operation: Operation
+        private readonly operation: Operation,
+        private readonly shapePosY: number
     ) {}
 
     /** Runs this test against a fresh situation, returning its result. */
     async run(): Promise<TestResult> {
-        const situation = new Situation();
+        const situation = new Situation(this.shapePosY);
         try {
             await this.operation.applyTo(situation);
             return TestResult.pass(this.name, situation.transcript);
